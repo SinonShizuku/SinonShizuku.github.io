@@ -18,7 +18,25 @@
 <li>如何插桩确认渲染线程的范围？</li>
 <li>如何找到这些线程的依赖关系？</li>
 </ol>
-<h3 id="安卓的渲染"><a href="#安卓的渲染" class="headerlink" title="安卓的渲染"></a>安卓的渲染</h3><p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=zdQRIYOST64">https://www.youtube.com/watch?v=zdQRIYOST64</a><br><a target="_blank" rel="noopener" href="https://source.android.com/docs/core/graphics?hl=zh-cn">https://source.android.com/docs/core/graphics?hl=zh-cn</a><br><a target="_blank" rel="noopener" href="https://www.androidperformance.com/2019/10/22/Android-Choreographer/">https://www.androidperformance.com/2019/10/22/Android-Choreographer/</a><br><a target="_blank" rel="noopener" href="https://blog.yorek.xyz/android/paid/master/ui_1/#_3">https://blog.yorek.xyz/android/paid/master/ui_1/#_3</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/qian520ao/article/details/81144167">https://blog.csdn.net/qian520ao/article/details/81144167</a></p>
+<h3 id="安卓的渲染"><a href="#安卓的渲染" class="headerlink" title="安卓的渲染"></a>安卓的渲染</h3><p>Graphics-aware Power Governing for Mobile Devices：2.1 Android Graphics Pipeline</p>
+<p>process:</p>
+<ol>
+<li>hardware composer send VSync (hardware composer -&gt; UI Thread)</li>
+<li>update begin; 60times&#x2F;min</li>
+<li>UI Thread traverses the display list and creates drawing commands ( view hierarchy - render node - the display list for the corresponding view )</li>
+<li>drawing commands from the display list are stored in the deferred display list, RenderThread traverses the deferred display list and creates an optimized drawing command (-&gt; RenderThread)</li>
+<li>RenderThread converts it into OpenGL commands</li>
+<li>delivers the command to the GPU through the GPU Channel (-&gt; GPU)</li>
+<li>RenderThread sets a flag in the BufferQueue; released when the GPU rendering is complete (-&gt; BufferQueue)</li>
+<li>SurfaceFlinger retrieves frames from the BufferQueue (-&gt;SurfaceFlinger)</li>
+<li>passes them to the hardware composer (-&gt; hardware composer)</li>
+<li>passes the frame to the display device (done)</li>
+</ol>
+<p>Drawn out: How Android renders (Google I&#x2F;O ‘18)：<br><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=zdQRIYOST64">https://www.youtube.com/watch?v=zdQRIYOST64</a></p>
+<p><img src="/../images/invalidate.png" alt="invalidate" title="invalidate"></p>
+<p><img src="/../images/rendering_process.png" alt="rendering process" title="rendering process"></p>
+<p>Android Document：<br><a target="_blank" rel="noopener" href="https://source.android.com/docs/core/graphics?hl=zh-cn">https://source.android.com/docs/core/graphics?hl=zh-cn</a></p>
+<p>else:<br><a target="_blank" rel="noopener" href="https://www.androidperformance.com/2019/10/22/Android-Choreographer/">https://www.androidperformance.com/2019/10/22/Android-Choreographer/</a><br><a target="_blank" rel="noopener" href="https://blog.yorek.xyz/android/paid/master/ui_1/#_3">https://blog.yorek.xyz/android/paid/master/ui_1/#_3</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/qian520ao/article/details/81144167">https://blog.csdn.net/qian520ao/article/details/81144167</a></p>
 <h3 id="RenderThread"><a href="#RenderThread" class="headerlink" title="RenderThread"></a>RenderThread</h3><p><a target="_blank" rel="noopener" href="https://developer.android.google.cn/guide/components/processes-and-threads?hl=zh-cn">https://developer.android.google.cn/guide/components/processes-and-threads?hl=zh-cn</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/145975251">https://zhuanlan.zhihu.com/p/145975251</a></p>
 <h3 id="Binder"><a href="#Binder" class="headerlink" title="Binder"></a>Binder</h3><p><a target="_blank" rel="noopener" href="https://www.androidperformance.com/2019/12/06/Android-Systrace-Binder/">https://www.androidperformance.com/2019/12/06/Android-Systrace-Binder/</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/carson_ho/article/details/73560642">https://blog.csdn.net/carson_ho/article/details/73560642</a></p>
 <h3 id="async-lock-mechanism-in-android"><a href="#async-lock-mechanism-in-android" class="headerlink" title="async&amp;lock mechanism in android"></a>async&amp;lock mechanism in android</h3><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/7092586612931952677">https://juejin.cn/post/7092586612931952677</a><br><a target="_blank" rel="noopener" href="https://medium.com/@shivajiofficial5088/exploring-linux-kernel-locking-mechanisms-0a2d08409bf9">https://medium.com/@shivajiofficial5088/exploring-linux-kernel-locking-mechanisms-0a2d08409bf9</a></p>
